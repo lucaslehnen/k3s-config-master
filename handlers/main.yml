@@ -1,2 +1,25 @@
 ---
 # handlers file for k3s-config-master
+- name: Enable and check K3s service
+  systemd:
+    name: k3s
+    daemon_reload: true
+    state: restarted
+    enabled: true
+  listen: restart_k3s
+
+- name: Copy config file to user home directory
+  copy:
+    src: ~{{ ansible_user }}/.kube/ansible
+    dest: ~{{ ansible_user }}/.kube/config
+    remote_src: true
+    owner: "{{ ansible_user }}"
+    mode: "u=rw,g=,o="
+  listen: config_changed
+
+- name: Replace https://localhost:6443 by https://master-ip:6443
+  replace:
+    path: ~{{ ansible_user }}/.kube/config
+    regexp: "127.0.0.1"
+    replace: "{{ master_ip }}"
+  listen: config_changed

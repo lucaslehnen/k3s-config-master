@@ -1,38 +1,74 @@
-Role Name
+Configure a k3s node to be a master node
 =========
 
-A brief description of the role goes here.
+This role can be used together with:
 
-Requirements
-------------
+  - https://github.com/lucaslehnen/k3s-install -> prepare
+  - https://github.com/lucaslehnen/k3s-config-worker -> Worker node
+  - https://github.com/lucaslehnen/k3s-reset -> Reset
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Configure the variables
+-----------------------
 
-Role Variables
---------------
+`master_ip` :  
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+The k3s master node IP;
 
-Dependencies
-------------
+`extra_server_args` : 
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Extra args that can be passed to the service. 
+Check the k3s documentation: https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
 
-Example Playbook
+`ansible_user` : 
+
+User to configure access to Kubernetes cluster via CLI/kubectl
+
+Example
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+In your `main.yml`:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- hosts: servers
+  roles:
+      - k3s-config-master
+  vars:
+    master_ip: "192.168.99.11"
+    ansible_user: ubuntu
+    extra_server_args: "--write-kubeconfig-mode 644"
+```
+
+In your `requirements.yml`:
+
+```yaml
+- name: k3s-config-master
+  src: https://github.com/lucaslehnen/k3s-config-master
+  version: v1.0.0
+```
+
+Define target hosts in your inventory file `hosts`:
+
+    [servers]
+    192.168.99.11
+    192.168.99.12
+    192.168.99.13
+
+Install requirements:
+
+```
+ansible-galaxy install -r requirements.yml
+```
+
+Call the playbook:
+
+    ansible-playbook -i hosts main.yml
 
 License
 -------
 
-BSD
+MIT
 
-Author Information
+Author
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+https://github.com/lucaslehnen

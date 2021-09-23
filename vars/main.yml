@@ -1,4 +1,2 @@
 ---
 # vars file for k3s-config-master
-master_ip: "{{ hostvars[groups['k3s-master'][0]]['ansible_host'] | default(groups['k3s-master'][0]) }}"
-ansible_user: ubuntu

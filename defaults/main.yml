@@ -1,2 +1,5 @@
 ---
 # defaults file for k3s-config-master
+master_ip: ""
+ansible_user: ubuntu
+extra_server_args: ""
