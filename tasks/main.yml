@@ -19,6 +19,12 @@
     owner: "{{ ansible_user }}"
     mode: "u=rwx,g=rx,o="
 
+- name: Create directory .kube on root
+  file:
+    path: /root/.kube
+    state: directory
+    mode: "u=rwx,g=rx,o="
+
 - name: Copy original config file to user home directory for backup
   copy:
     src: /etc/rancher/k3s/k3s.yaml
@@ -26,6 +32,9 @@
     remote_src: true
     mode: preserve
   notify: config_changed
+
+- name: Force all notified handlers to run at this point
+  meta: flush_handlers
 
 - name: Create kubectl symlink
   file:

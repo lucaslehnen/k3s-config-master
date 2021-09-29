@@ -14,7 +14,15 @@
     dest: ~{{ ansible_user }}/.kube/config
     remote_src: true
     owner: "{{ ansible_user }}"
-    mode: "u=rw,g=,o="
+    mode: "u=r,g=,o="
+  listen: config_changed
+
+- name: Copy config file to root directory
+  copy:
+    src: ~{{ ansible_user }}/.kube/ansible
+    dest: /root/.kube/config
+    remote_src: true
+    mode: "u=r,g=,o="
   listen: config_changed
 
 - name: Replace https://localhost:6443 by https://master-ip:6443
