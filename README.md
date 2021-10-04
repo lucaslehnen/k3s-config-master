@@ -1,6 +1,8 @@
 Configure a k3s node to be a master node
 =========
 
+DEPRECATED: Use this collection: https://github.com/lucaslehnen/tchecode.k3s
+
 This role can be used together with:
 
   - https://github.com/lucaslehnen/k3s-install -> prepare
